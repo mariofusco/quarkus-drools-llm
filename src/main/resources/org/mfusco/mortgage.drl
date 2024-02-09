@@ -1,0 +1,17 @@
+package org.mfusco;
+
+import org.mfusco.Person
+
+global java.util.List answers;
+
+rule CheckAge when
+	$p: Person( age < 18 )
+then
+	answers.add($p.getFullName() + " is too young");
+end
+
+rule CheckIncome when
+	$p: Person( income < 100000 )
+then
+	answers.add($p.getFullName() + "'s income is too low");
+end
