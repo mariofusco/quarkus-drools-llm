@@ -1,7 +1,9 @@
 package org.mfusco;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -50,5 +52,32 @@ public class ChatBotResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String person(String sessionId) {
         return mortgageCalculator.grantMortgage(chatMemoryBean.getPerson(sessionId));
+    }
+
+    @POST
+    @Path("mortgage")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Reply mortgage(String message) {
+        long start = System.currentTimeMillis();
+        Person person = personExtractor.extractPersonFrom(message);
+        long llmResponse = System.currentTimeMillis();
+        System.out.println( "LLM processing time: " + (llmResponse - start) + " msecs" );
+        String response = mortgageCalculator.grantMortgage(person);
+        long rulesResponse = System.currentTimeMillis();
+        System.out.println( "Rule engine processing time: " + (rulesResponse - llmResponse) + " msecs" );
+        return new Reply(response);
+    }
+
+    public static class Reply implements java.io.Serializable {
+        private final String reply;
+
+        public Reply(String message) {
+            this.reply = message;
+        }
+
+        public String getReply() {
+            return reply;
+        }
     }
 }
