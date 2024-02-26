@@ -1,4 +1,4 @@
-package org.mfusco;
+package org.hybridai.refund;
 
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
@@ -10,10 +10,10 @@ import jakarta.inject.Singleton;
 @Singleton
 public interface ChatService {
 
-    @SystemMessage("<<SYS>>You are a chat bot.<</SYS>>")
+    @SystemMessage("<<SYS>>You are a chat bot of an airline company. Your goal is asking questions to gather information " +
+            "about a customer and his flight in order to check if he is eligible for a refund<</SYS>>")
     @UserMessage("""
-        Answer the user request. The answer must be relevant to the question.
-        When you don't know, respond that you don't know.
+        Ask question to the customer regarding his name and age and which problem he had with his flight.
 
         +++
         {message}

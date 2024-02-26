@@ -1,4 +1,4 @@
-package org.mfusco;
+package org.hybridai.refund;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +13,7 @@ public class ChatMemoryBean implements ChatMemoryProvider {
 
     private final Map<Object, ChatMemory> memories = new ConcurrentHashMap<>();
 
-    private final Map<Object, Person> persons = new ConcurrentHashMap<>();
+    private final Map<Object, SessionData> data = new ConcurrentHashMap<>();
 
     @Override
     public ChatMemory get(Object memoryId) {
@@ -23,15 +23,12 @@ public class ChatMemoryBean implements ChatMemoryProvider {
                 .build());
     }
 
-    public void clear(Object session) {
-        memories.remove(session);
+    public void clear(Object sessionId) {
+        memories.remove(sessionId);
+        data.remove(sessionId);
     }
 
-    public void registerPerson(Object id, Person person) {
-        persons.put(id, person);
-    }
-
-    public Person getPerson(Object id) {
-        return persons.get(id);
+    public SessionData getSessionData(Object sessionId) {
+        return data.computeIfAbsent(sessionId, id -> new SessionData());
     }
 }

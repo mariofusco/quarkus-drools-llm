@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .chat-container .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .chat-container .message {
+            margin-bottom: 10px;
+        }
+        .chat-container .user-message {
+            text-align: right;
+        }
+        .chat-container .bot-message {
+            text-align: left;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h1 align="center">Mortgage calculator</h1>
+
+<div class="chat-container">
+    <ul class="messages"></ul>
+    <textarea id="user-input" placeholder="Describe the mortgage applicant..." cols="120"></textarea>
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    const apiUrl = 'http://localhost:8080/hybridai/mortgage';
+
+    function displayMessage(message, sender) {
+        const messagesContainer = document.querySelector('.messages');
+        const messageElement = document.createElement('li');
+        messageElement.classList.add('message');
+        messageElement.classList.add(`${sender}-message`);
+        messageElement.innerText = message;
+        messagesContainer.appendChild(messageElement);
+    }
+
+    function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        if (!userInput.trim()) return;
+
+        displayMessage(userInput, 'user');
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userInput })
+        })
+                .then(response => response.json())
+                .then(data => {
+                    console.error('data:', data);
+                    const botReply = data.reply;
+                    displayMessage(botReply, 'bot');
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    displayMessage('Error sending message. Please try again.' + error, 'bot');
+                });
+
+        document.getElementById('user-input').value = '';
+    }
+</script>
+</body>
+</html>

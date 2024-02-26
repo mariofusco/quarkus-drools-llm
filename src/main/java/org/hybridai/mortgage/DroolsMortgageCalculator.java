@@ -1,4 +1,4 @@
-package org.mfusco;
+package org.hybridai.mortgage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class DroolsMortgageCalculator {
     KieRuntimeBuilder runtimeBuilder;
 
     public String grantMortgage(Person person) {
-        KieSession kieSession = runtimeBuilder.newKieSession();
+        KieSession kieSession = runtimeBuilder.newKieSession("mortgage");
         List<String> answers = new ArrayList<>();
         kieSession.setGlobal("answers", answers);
         kieSession.insert(person);

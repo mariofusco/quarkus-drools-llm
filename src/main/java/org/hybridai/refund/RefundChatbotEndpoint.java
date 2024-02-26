@@ -1,0 +1,88 @@
+package org.hybridai.refund;
+
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import org.hybridai.Reply;
+import org.jboss.logging.Logger;
+
+@Path("/hybridai")
+public class RefundChatbotEndpoint {
+
+    private static final Logger LOG = Logger.getLogger(RefundChatbotEndpoint.class);
+
+    @Inject
+    ChatService chatService;
+
+    @Inject
+    ChatMemoryBean chatMemoryBean;
+
+    @Inject
+    CustomerExtractor customerExtractor;
+
+    @Inject
+    FlightExtractor flightExtractor;
+
+    @Inject
+    DroolsRefundCalculator refundCalculator;
+
+    @POST
+    @Path("chatbot/{sessionId}/refund")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Reply chat(String sessionId, String message) {
+        SessionData sessionData = chatMemoryBean.getSessionData(sessionId);
+
+        var customer = CompletableFuture.supplyAsync(() -> readCustomer(sessionData, message));
+        var flight = CompletableFuture.supplyAsync(() -> readFlight(sessionData, message));
+        var chatResponse = CompletableFuture.supplyAsync(() -> chatService.chat(sessionId, message));
+
+        customer.join().ifPresent(sessionData::setCustomer);
+        flight.join().ifPresent(sessionData::setFlight);
+
+        if (sessionData.isComplete()) {
+            chatMemoryBean.clear(sessionId);
+            return new Reply(refundCalculator.checkRefund(sessionData));
+        }
+
+        return new Reply(chatResponse.join());
+    }
+
+    private Optional<Customer> readCustomer(SessionData sessionData, String message) {
+        try {
+            if (sessionData.getCustomer() == null) {
+                LOG.info("Extracting customer from " + message);
+                Customer customer = customerExtractor.extractCustomerFrom(message);
+                if (customer != null && customer.isValid()) {
+                    LOG.info("Extracted: " + customer);
+                    return Optional.of(customer);
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Flight> readFlight(SessionData sessionData, String message) {
+        try {
+            if (sessionData.getFlight() == null) {
+                LOG.info("Extracting flight from " + message);
+                Flight flight = flightExtractor.extractFlightFrom(message);
+                if (flight != null && flight.isValid()) {
+                    LOG.info("Extracted: " + flight);
+                    return Optional.of(flight);
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return Optional.empty();
+    }
+}
