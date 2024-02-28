@@ -3,8 +3,9 @@ package org.hybridai.mortgage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.inject.Singleton;
+import org.hybridai.refund.EmptyChatMemory;
 
-@RegisterAiService
+@RegisterAiService(chatMemoryProviderSupplier = EmptyChatMemory.Supplier.class)
 @Singleton
 public interface PersonExtractor {
 
