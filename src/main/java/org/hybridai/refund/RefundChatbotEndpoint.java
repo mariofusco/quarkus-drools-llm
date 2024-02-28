@@ -9,7 +9,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import org.hybridai.Reply;
 import org.jboss.logging.Logger;
 
 @Path("/hybridai")
@@ -34,9 +33,9 @@ public class RefundChatbotEndpoint {
 
     @POST
     @Path("chatbot/{sessionId}/refund")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Reply chat(String sessionId, String message) {
+    public String chat(String sessionId, String message) {
         SessionData sessionData = chatMemoryBean.getSessionData(sessionId);
 
         var customer = CompletableFuture.supplyAsync(() -> readCustomer(sessionData, message));
@@ -47,11 +46,12 @@ public class RefundChatbotEndpoint {
         flight.join().ifPresent(sessionData::setFlight);
 
         if (sessionData.isComplete()) {
+            chatResponse.complete("unnecessary");
             chatMemoryBean.clear(sessionId);
-            return new Reply(refundCalculator.checkRefund(sessionData));
+            return refundCalculator.checkRefund(sessionData);
         }
 
-        return new Reply(chatResponse.join());
+        return chatResponse.join();
     }
 
     private Optional<Customer> readCustomer(SessionData sessionData, String message) {

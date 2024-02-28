@@ -6,7 +6,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import org.hybridai.Reply;
 import org.hybridai.refund.RefundChatbotEndpoint;
 import org.jboss.logging.Logger;
 
@@ -23,9 +22,9 @@ public class PasswordEndpoint {
 
     @POST
     @Path("password")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Reply password(String message) {
+    public String password(String message) {
         long start = System.currentTimeMillis();
         String password = passwordGenerator.generatePassword(message).trim();
         int length = 0;
@@ -37,6 +36,6 @@ public class PasswordEndpoint {
         String response = passwordRewriter.rewritePassword(password);
         long rulesResponse = System.currentTimeMillis();
         LOG.info( "Rule engine processing time: " + (rulesResponse - llmResponse) + " msecs" );
-        return new Reply(response);
+        return response;
     }
 }

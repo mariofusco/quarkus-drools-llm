@@ -6,7 +6,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import org.hybridai.Reply;
 
 @Path("/hybridai")
 public class MortgageEndpoint {
@@ -25,9 +24,9 @@ public class MortgageEndpoint {
 
     @POST
     @Path("/mortgage")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Reply mortgage(String message) {
+    public String mortgage(String message) {
         long start = System.currentTimeMillis();
         Person person = personExtractor.extractPersonFrom(message);
         long llmResponse = System.currentTimeMillis();
@@ -35,6 +34,6 @@ public class MortgageEndpoint {
         String response = mortgageCalculator.grantMortgage(person);
         long rulesResponse = System.currentTimeMillis();
         System.out.println( "Rule engine processing time: " + (rulesResponse - llmResponse) + " msecs" );
-        return new Reply(response);
+        return response;
     }
 }

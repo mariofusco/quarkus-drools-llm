@@ -73,11 +73,10 @@
             },
             body: JSON.stringify({ message: userInput })
         })
-                .then(response => response.json())
+                .then(response => response.text())
                 .then(data => {
                     console.error('data:', data);
-                    const botReply = data.reply;
-                    displayMessage(botReply, 'bot');
+                    displayMessage(data, 'bot');
                 })
                 .catch(error => {
                     console.error('Error sending message:', error);
