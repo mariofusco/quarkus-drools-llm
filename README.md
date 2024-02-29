@@ -28,6 +28,12 @@ quarkus.langchain4j.ollama.chat-model.temperature=0.1
 quarkus.langchain4j.ollama.timeout=180s
 ```
 
+For detailed instructions of Ollama please refer to the [Ollama](https://github.com/ollama/ollama) documentation, but for example, you can start the containerized server with Mistral model by the following command in order to run this application:
+```shell script
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker exec -it ollama ollama run mistral
+```
+
 ## Running the application
 
 ### Using the dev mode
