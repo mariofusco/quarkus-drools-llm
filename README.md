@@ -1,5 +1,9 @@
 # Machine Learning + Symbolic Reasoning: a Quarkus story on Artificial Intelligence
 
+| Hybrid Reasoning in a nutshell | 
+|---| 
+| Hybrid reasoning, also known as [Neuro-symbolic AI](https://en.wikipedia.org/wiki/Neuro-symbolic_AI), is a type of artificial intelligence mixing Machine Learning and Symbolic Reasoning in order to complement each other, covering with second the areas where the first falls short, like the lacks of reliability, reproducibility and transparency.<br/><br/>The main idea behind this project is showing, with simple but compelling examples, how hybrid reasoning, and in particular how mixing an LLM with a rule engine, could allow to implement chatbots in different business domains that are both user-friendly and capable of applying the business rules of that specific domain in a rigorous way and without suffering of any hallucinations. |
+
 ## Power is nothing without control
 
 What you can do nowadays with LLM systems like ChatGPT is simply mind-blowing. I must admit that I cannot stop being surprised and from time to time literally jumping from my seat thinking: "I didn't imagine that AI could do ALSO this!". What is a bit misleading here is that what we now call and tend to identify with Artificial Intelligence is actually Deep Learning which is only a subset of all AI technologies available.
