@@ -12,7 +12,11 @@ What you can do nowadays with LLM systems like ChatGPT is simply mind-blowing. I
 
 In other words Deep Learning is only a fraction of the whole AI-story. Moreover there are many situations where being surprised is the last thing that you may want. You don't want to jump from your seat when your bank refuses to concede you a mortgage without any human understandable or trackable reason, but only because an LLM said no. And even the bank may want to grant their mortgages only to applicants who are considered viable under their strict, well-defined and not questionable business rules.
 
-In essence, the power and flexibility that a well-trained Deep Learning model gives you is virtually infinite, but often, at least in some parts of your application, what you need is more confined control to make it adhere to your business domain and rules.
+In essence, the power and flexibility that a well-trained Deep Learning model gives you is virtually infinite, but as already discussed in many academical papers, given their statistical nature, they cannot be completely reliable and major drawbacks like hallucinations are unavoidable. 
+
+![Hallucinations.png](images%2FHallucinations.png)
+
+In reality, what you often need, at least in some parts of your application, is a more confined and absolutely predictable control, in order to make it coherent with your business domain and obey flawlessly to its rules.
 
 ## Combining LLM flexibility and rule engine predictability
 
