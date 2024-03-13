@@ -9,6 +9,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import org.hybridai.llmutil.StatefulChat;
 import org.jboss.logging.Logger;
 
 @Path("/hybridai")
@@ -20,7 +21,7 @@ public class RefundChatbotEndpoint {
     ChatService chatService;
 
     @Inject
-    ChatMemoryBean chatMemoryBean;
+    StatefulChat chatMemory;
 
     @Inject
     CustomerExtractor customerExtractor;
@@ -36,7 +37,7 @@ public class RefundChatbotEndpoint {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public String chat(String sessionId, String message) {
-        SessionData sessionData = chatMemoryBean.getSessionData(sessionId);
+        SessionData sessionData = chatMemory.getSessionData(sessionId);
 
         var customer = CompletableFuture.supplyAsync(() -> readCustomer(sessionData, message));
         var flight = CompletableFuture.supplyAsync(() -> readFlight(sessionData, message));
@@ -47,7 +48,7 @@ public class RefundChatbotEndpoint {
 
         if (sessionData.isComplete()) {
             chatResponse.complete("unnecessary");
-            chatMemoryBean.clear(sessionId);
+            chatMemory.clear(sessionId);
             return refundCalculator.checkRefund(sessionData);
         }
 

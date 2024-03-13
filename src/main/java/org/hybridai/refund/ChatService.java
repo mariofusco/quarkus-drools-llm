@@ -5,8 +5,9 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.inject.Singleton;
+import org.hybridai.llmutil.StatefulChat;
 
-@RegisterAiService
+@RegisterAiService(chatMemoryProviderSupplier = StatefulChat.MemorySupplier.class)
 @Singleton
 public interface ChatService {
 

@@ -3,8 +3,9 @@ package org.hybridai.refund;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.inject.Singleton;
+import org.hybridai.llmutil.StatelessChat;
 
-@RegisterAiService(chatMemoryProviderSupplier = EmptyChatMemory.Supplier.class)
+@RegisterAiService(chatMemoryProviderSupplier = StatelessChat.MemorySupplier.class)
 @Singleton
 public interface FlightExtractor {
 
