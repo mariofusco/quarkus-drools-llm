@@ -1,4 +1,4 @@
-package org.hybridai.refund;
+package org.hybridai.refund.model;
 
 public record Customer(String firstName, String lastName, int age)  {
 

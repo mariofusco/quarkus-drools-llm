@@ -1,4 +1,6 @@
-package org.hybridai.refund;
+package org.hybridai.refund.calculator;
+
+import org.hybridai.refund.model.*;
 
 rule "Refund eligibility" when
 	Flight( $delay : delayInMinutes >= 60 )

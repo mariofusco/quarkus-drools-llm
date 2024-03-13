@@ -1,10 +1,20 @@
-package org.hybridai.refund;
+package org.hybridai.refund.model;
 
 public class SessionData {
+
+    private final String sessionId;
 
     private Customer customer;
 
     private Flight flight;
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public SessionData(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public Customer getCustomer() {
         return customer;

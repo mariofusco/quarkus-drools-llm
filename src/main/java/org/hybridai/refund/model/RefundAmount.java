@@ -1,4 +1,4 @@
-package org.hybridai.refund;
+package org.hybridai.refund.model;
 
 public class RefundAmount {
 

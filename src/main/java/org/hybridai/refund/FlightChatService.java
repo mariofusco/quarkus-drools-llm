@@ -9,12 +9,12 @@ import org.hybridai.llmutil.StatefulChat;
 
 @RegisterAiService(chatMemoryProviderSupplier = StatefulChat.MemorySupplier.class)
 @Singleton
-public interface ChatService {
+public interface FlightChatService {
 
     @SystemMessage("<<SYS>>You are a chat bot of an airline company. Your goal is asking questions to gather information " +
-            "about a customer and his flight in order to check if he is eligible for a refund<</SYS>>")
+            "about the customer's flight and which problems he had with it<</SYS>>")
     @UserMessage("""
-        Ask question to the customer regarding his name and age and which problem he had with his flight.
+        Ask question to the customer regarding the number of the flight and its eventual delay.
 
         +++
         {message}
