@@ -26,14 +26,20 @@ The goal of this project is demonstrating how [Quarkus](https://quarkus.io/), wi
 
 ## Installing and integrating a local LLM engine
 
-langchain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration relies on a locally running [Ollama](https://github.com/ollama/ollama) server. 
+langchain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration uses on a locally running [Ollama](https://github.com/ollama/ollama) server. 
 
 Ollama has a [library](https://ollama.com/library) with a quite long list of different models. This project uses by default the model called Mistral 7B that offers a good compromise between system requirements and capabilities. This choice has been configured in the Quarkus application.properties file as it follows: 
 
 ```
+# Configure Ollama server to use Mistral 7B model
 quarkus.langchain4j.ollama.chat-model.model-id=mistral
+# Choose a low temperature to minimize hallucination
 quarkus.langchain4j.ollama.chat-model.temperature=0.1
+# Set timeout to 3 minutes (local LLM can be quite slow)
 quarkus.langchain4j.ollama.timeout=180s
+# Enable logging of both requests and responses
+quarkus.langchain4j.ollama.log-requests=true
+quarkus.langchain4j.ollama.log-responses=true
 ```
 
 For detailed instructions of Ollama please refer to the [Ollama](https://github.com/ollama/ollama) documentation, but for example, you can start the containerized server with Mistral model by the following command in order to run this application:
@@ -51,7 +57,7 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-Once the application is running you can connect to the [port 8080 of your localhost](http://localhost:8080/) and will obtain a simple index page only containing a list of links to the examples provided by this project. We will analyze these examples in more details in the remaining part of this document.
+Once the application is running you can connect to the [port 8080 of your localhost](http://localhost:8080/) and will obtain a simple index page only containing a list of links to the examples provided by this project. We will analyze these examples in more details in the second part of this document.
 
 ### Packaging and running the application
 
