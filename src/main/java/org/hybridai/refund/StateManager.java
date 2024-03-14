@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.hybridai.llmutil.ConcatenatingChatMemory;
 import org.hybridai.refund.model.ChatState;
 import org.hybridai.refund.model.Customer;
 import org.hybridai.refund.model.Flight;
@@ -30,6 +31,9 @@ public class StateManager {
     @Inject
     FlightExtractor flightExtractor;
 
+    @Inject
+    ConcatenatingChatMemory extractorsMemory;
+
     public ChatbotState getState(SessionData sessionData) {
         var nextState = stateMachine.nextState(sessionData);
         return new ChatbotState(nextState, sessionData);
@@ -39,9 +43,11 @@ public class StateManager {
         try {
             if (sessionData.getCustomer() == null) {
                 LOG.info("Extracting customer from " + message);
-                Customer customer = customerExtractor.extractData(message);
+                String sessionId = sessionData.getSessionId() + "c";
+                Customer customer = customerExtractor.extractData(extractorsMemory.append(sessionId, message));
                 if (customer != null && customer.isValid()) {
                     LOG.info("Extracted: " + customer);
+                    extractorsMemory.clear(sessionId);
                     return Optional.of(customer);
                 }
             }
@@ -55,9 +61,11 @@ public class StateManager {
         try {
             if (sessionData.getFlight() == null) {
                 LOG.info("Extracting flight from " + message);
-                Flight flight = flightExtractor.extractData(message);
+                String sessionId = sessionData.getSessionId() + "f";
+                Flight flight = flightExtractor.extractData(extractorsMemory.append(sessionId, message));
                 if (flight != null && flight.isValid()) {
                     LOG.info("Extracted: " + flight);
+                    extractorsMemory.clear(sessionId);
                     return Optional.of(flight);
                 }
             }

@@ -9,7 +9,7 @@ import org.hybridai.llmutil.StatelessChat;
 @Singleton
 public interface PasswordGenerator {
 
-    @UserMessage("Create a random word having a strong relation with {text}. Return only one single word and nothing else without any additional note or comment or punctuation.")
-    String generatePassword(String text);
+    @UserMessage("Create a random word having a strong relation with this text '{message}'. Return only one single word and nothing else without any additional note or comment or punctuation.")
+    String generatePassword(String message);
 }
 

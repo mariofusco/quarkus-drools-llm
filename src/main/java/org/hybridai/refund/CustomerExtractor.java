@@ -10,7 +10,7 @@ import org.hybridai.refund.model.Customer;
 @Singleton
 public interface CustomerExtractor {
 
-    @UserMessage("Extract information about a customer from {text}. The response must contain only the JSON with customer's data and without any other sentence.")
+    @UserMessage("Extract information about a customer from this text '{text}'. The response must contain only the JSON with customer's data and without any other sentence.")
     Customer extractData(String text);
 }
 

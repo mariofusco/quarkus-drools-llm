@@ -28,6 +28,7 @@ public class RefundChatbotEndpoint {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public String chat(String sessionId, String message) {
+        LOG.info("message = " + message);
         LOG.info("sessionId = " + sessionId);
         SessionData sessionData = sessionCache.getSessionData(sessionId);
         LOG.info("sessionData = " + sessionData);
