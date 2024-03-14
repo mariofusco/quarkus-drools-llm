@@ -136,7 +136,13 @@ Mortgage cannot be granted to Sofia Fusco because [Sofia Fusco is too young, Sof
 
 ## The password generator example
 
-Having to generate a strong but easy to remember password is a very common task that from time to time we are asked to perform while browsing the internet, so why not taking advantage of the creativity of an LLM for this? For instance we can ask to the LLM a word that relates with `football` and it could reply `goalkeeper`.
+Having to generate a strong but easy to remember password is a very common task that from time to time we are asked to perform while browsing the internet, so why not taking advantage of the creativity of an LLM for this? 
+
+Actually in this situation we don't need a fully reliable LLM. Conversly it is more important if it could be even more creative than usual. To do so we can raise the LLM temperature that is a parameter that influences the language model's output, determining whether the output is more random and creative or more predictable. A higher temperature will result in lower probability, i.e more creative outputs. 
+
+Thanks to the Quarkus integration this is easily achievable defining [a second and _hotter_ LLM model](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/resources/application.properties#L13) and [configuring the password generator to use it](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/java/org/hybridai/password/PasswordGenerator.java#L8). 
+
+In this way, we could for instance ask to the LLM to generate a random word that relates with `football` and it could reply `goalkeeper`.
 
 Unfortunately almost never we're allowed to use such a simple word as a password. Actually a password should obey to a few simple rules, such as having a certain length and containing at least a capital letter, a digit, a symbol and the blood of a black roaster killed on a full moon night.
 
@@ -148,10 +154,16 @@ This example has been inspired by a recent chatbot horror story demonstrating on
 
 ![](images/aircanada.png)
 
-The idea here is to keep using the LLM to provide a friendly chatbot, but leverage a more reliable rule engine when it is necessary to decide if the customer is eligible for a refund and of which amount.
+The idea here is to keep using the LLM to provide a friendly chatbot, but leveraging a more predictable rule engine when it is necessary to decide if the customer is eligible for a refund and of which amount.
 
-In this example the [business rules](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/resources/org/hybridai/refund/refund.drl) are simple: a customer can have a refund of $2 for each minute of delay (if the flight had at least one hour of delay) plus a 10% in case of a senior customer (older than 65). So for instance you may have the following interaction.
+In this example the [business rules](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/resources/org/hybridai/refund/calculator/refund.drl) are simple: a customer can have a refund of $2 for each minute of delay (if the flight had at least one hour of delay) plus a 10% in case of a senior customer (older than 65). 
+
+The rule engine however is not only used to calculate the final refund amount, but also to define [another set of rules](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/resources/org/hybridai/refund/statemachine/statemachine.drl) implementing a state machine. This state machine has the purpose of guiding our chatbot through the different stages of the data acquisition, selecting right the data extractor for the current stage. In essence the architecture of our chatbot could be visually summarized in this way.
+
+![llm_drools.png](images%2Fllm_drools.png)
+
+Giving a try to this setup you could for instance experience a conversation with our chatbot like the following.
 
 ![](images/refund.png)
 
-In fact the 4 hours, 240 minutes, correspond to a refund of $480, plus the 10% since the customer is 70 years old, for a total of $528.
+This outcome is coeherent with the business rules described above, in fact the 4 hours, 240 minutes, correspond to a refund of $480, plus the 10% since the customer is 70 years old, giving a total of $528.
