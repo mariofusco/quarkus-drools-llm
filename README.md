@@ -10,9 +10,9 @@ What you can do nowadays with LLM systems like ChatGPT is simply mind-blowing. I
 
 ![](images/AI-ML-DL-1.png)
 
-In other words Deep Learning is only a fraction of the whole AI-story. Moreover there are many situations where being surprised is the last thing that you may want. You don't want to jump from your seat when your bank refuses to concede you a mortgage without any human understandable or trackable reason, but only because an LLM said no. And even the bank may want to grant their mortgages only to applicants who are considered viable under their strict, well-defined and not questionable business rules.
+In other words Deep Learning is only a fraction of the whole AI-story. Moreover, there are many situations where being surprised is the last thing that you may want. You don't want to jump from your seat when your bank refuses to concede you a mortgage without any human understandable or trackable reason, but only because an LLM said no. And even the bank may want to grant their mortgages only to applicants who are considered viable under their strict, well-defined and not questionable business rules.
 
-In essence, the power and flexibility that a well-trained Deep Learning model gives you is virtually infinite, but as already discussed in many academical papers, given their statistical nature, they cannot be completely reliable and major drawbacks like hallucinations are unavoidable. 
+In essence, the power and flexibility that a well-trained Deep Learning model gives is virtually infinite, but as already discussed in many academical papers, given their statistical nature, they cannot be completely reliable and major drawbacks like hallucinations are unavoidable. 
 
 ![Hallucinations.png](images%2FHallucinations.png)
 
@@ -22,15 +22,15 @@ In reality, what you often need, at least in some parts of your application, is 
 
 Given these premises why not mixing 2 very different and complementary AI branches like deep learning and symbolic reasoning? Moving forward with the mortgage example, this will give us a chance to implement an application with the corporate rigor required by the strict business rules of a bank, but queryable in the most human friendly possible way.
 
-The goal of this project is demonstrating how [Quarkus](https://quarkus.io/), with the help of its [Drools](https://www.drools.org/) and [langchain4j](https://github.com/langchain4j/langchain4j) extensions, allows to easily integrate these 2 technologies and combine them to implement this mortgage example and other interesting use cases. 
+The goal of this project is to demonstrate how [Quarkus](https://quarkus.io/), with the help of its [Drools](https://www.drools.org/) and [LangChain4j](https://github.com/langchain4j/langchain4j) extensions, allows to easily integrate these 2 technologies and combine them to implement this mortgage example and other interesting use cases. 
 
 ## Installing and integrating a local LLM engine
 
-langchain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration uses on a locally running [Ollama](https://github.com/ollama/ollama) server. 
+LangChain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration uses on a locally running [Ollama](https://github.com/ollama/ollama) server. 
 
-Ollama has a [library](https://ollama.com/library) with a quite long list of different models. This project uses by default the model called Mistral 7B that offers a good compromise between system requirements and capabilities. This choice has been configured in the Quarkus application.properties file as it follows: 
+Ollama has a [library](https://ollama.com/library) with quite a long list of different models. This project defaults to a model called Mistral 7B that offers a good compromise between system requirements and capabilities. This choice has been configured in the Quarkus application.properties file as it follows: 
 
-```
+```properties
 # Configure Ollama server to use Mistral 7B model
 quarkus.langchain4j.ollama.chat-model.model-id=mistral
 # Choose a low temperature to minimize hallucination
@@ -120,9 +120,9 @@ As requested the LLM replies with a JSON containing those data
 {"firstName": "Mario", "lastName": "Fusco", "birthDate": "1974-03-18", "income": 250000}
 ```
 
-that are automatically translated by langchain4j into an instance of the Person class. At this point it is straightforward to insert this Person object into a Drools session and let it evaluate the bank business rules against it.
+that are automatically translated by LangChain4j into an instance of the `Person` class. At this point it is straightforward to insert this `Person` object into a Drools session and let it evaluate the bank business rules against it.
 
-The other nice, and in similar situations also very likely required, advantage of this solution is that a rule engine is a completely transparent and trackable form of artificial intelligence, so if you write something like:
+The other nice (and in similar situations also very likely required) advantage of this solution is that a rule engine is a completely transparent and trackable form of artificial intelligence, so if you write something like:
 
 ```
 Sofia the daughter of Mario Fusco is born on the 26th day of the ninth month of 2011. She is a very smart student.
@@ -138,7 +138,7 @@ Mortgage cannot be granted to Sofia Fusco because [Sofia Fusco is too young, Sof
 
 Having to generate a strong but easy to remember password is a very common task that from time to time we are asked to perform while browsing the internet, so why not taking advantage of the creativity of an LLM for this? 
 
-Actually in this situation we don't need a fully reliable LLM. Conversly it is more important if it could be even more creative than usual. To do so we can raise the LLM temperature that is a parameter that influences the language model's output, determining whether the output is more random and creative or more predictable. A higher temperature will result in lower probability, i.e more creative outputs. 
+Actually in this situation we don't need a fully reliable LLM. Conversely, it is more important if it could be even more creative than usual. To do so we can raise the LLM temperature that is a parameter that influences the language model's output, determining whether the output is more random and creative or more predictable. A higher temperature will result in lower probability, i.e more creative outputs. 
 
 Thanks to the Quarkus integration this is easily achievable defining [a second and _hotter_ LLM model](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/resources/application.properties#L13) and [configuring the password generator to use it](https://github.com/mariofusco/quarkus-drools-llm/blob/main/src/main/java/org/hybridai/password/PasswordGenerator.java#L8). 
 
