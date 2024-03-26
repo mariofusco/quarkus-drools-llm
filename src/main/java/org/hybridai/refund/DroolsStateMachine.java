@@ -4,7 +4,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.hybridai.refund.model.ChatState;
 import org.hybridai.refund.model.SessionData;
-import org.kie.api.runtime.ClassObjectFilter;
 import org.kie.api.runtime.KieRuntimeBuilder;
 import org.kie.api.runtime.KieSession;
 
@@ -18,6 +17,6 @@ public class DroolsStateMachine {
         kieSession.insert(sessionData);
         kieSession.fireAllRules();
 
-        return (ChatState) kieSession.getObjects(new ClassObjectFilter(ChatState.class)).iterator().next();
+        return kieSession.getSingleInstanceOf(ChatState.class);
     }
 }

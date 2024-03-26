@@ -1,6 +1,6 @@
 package org.hybridai.refund.model;
 
-public record Customer(String firstName, String lastName, int age)  {
+public record Customer(String firstName, String lastName, int age) implements Validated {
 
     @Override
     public String toString() {
@@ -15,6 +15,7 @@ public record Customer(String firstName, String lastName, int age)  {
         return firstName + " " + lastName;
     }
 
+    @Override
     public boolean isValid() {
         return firstName != null && !firstName.isEmpty() && age > 0;
     }

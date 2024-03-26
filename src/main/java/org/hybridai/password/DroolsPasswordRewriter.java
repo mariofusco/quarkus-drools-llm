@@ -15,7 +15,6 @@ public class DroolsPasswordRewriter {
         KieSession kieSession = runtimeBuilder.newKieSession("password");
         kieSession.insert(s);
         kieSession.fireAllRules();
-        return kieSession.getObjects().iterator().next().toString();
+        return kieSession.getSingleInstanceOf(String.class);
     }
-
 }

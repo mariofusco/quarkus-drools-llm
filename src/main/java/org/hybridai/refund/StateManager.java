@@ -1,14 +1,14 @@
 package org.hybridai.refund;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.hybridai.llmutil.ConcatenatingChatMemory;
 import org.hybridai.refund.model.ChatState;
-import org.hybridai.refund.model.Customer;
-import org.hybridai.refund.model.Flight;
 import org.hybridai.refund.model.SessionData;
+import org.hybridai.refund.model.Validated;
 import org.jboss.logging.Logger;
 
 @Singleton
@@ -39,30 +39,12 @@ public class StateManager {
         return new ChatbotState(nextState, sessionData);
     }
 
-    private Optional<Customer> readCustomer(SessionData sessionData, String message) {
-        try {
-            if (sessionData.getCustomer() == null) {
-                LOG.info("Extracting customer from " + message);
-                String sessionId = sessionData.getSessionId() + "c";
-                Customer customer = customerExtractor.extractData(extractorsMemory.append(sessionId, message));
-                if (customer != null && customer.isValid()) {
-                    LOG.info("Extracted: " + customer);
-                    extractorsMemory.clear(sessionId);
-                    return Optional.of(customer);
-                }
-            }
-        } catch (Exception e) {
-            // ignore
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Flight> readFlight(SessionData sessionData, String message) {
+    private <T extends Validated> Optional<T> readDomainObject(SessionData sessionData, String message, String kind, Function<String, T> extractor) {
         try {
             if (sessionData.getFlight() == null) {
-                LOG.info("Extracting flight from " + message);
-                String sessionId = sessionData.getSessionId() + "f";
-                Flight flight = flightExtractor.extractData(extractorsMemory.append(sessionId, message));
+                LOG.info("Extracting " + kind + " from " + message);
+                String sessionId = sessionData.getSessionId() + kind;
+                T flight = extractor.apply(extractorsMemory.append(sessionId, message));
                 if (flight != null && flight.isValid()) {
                     LOG.info("Extracted: " + flight);
                     extractorsMemory.clear(sessionId);
@@ -87,10 +69,10 @@ public class StateManager {
         public void extractData(String message) {
             switch (chatState) {
                 case EXTRACT_CUSTOMER:
-                    readCustomer(sessionData, message).ifPresent(sessionData::setCustomer);
+                    readDomainObject(sessionData, message, "customer", customerExtractor::extractData).ifPresent(sessionData::setCustomer);
                     break;
                 case EXTRACT_FLIGHT:
-                    readFlight(sessionData, message).ifPresent(sessionData::setFlight);
+                    readDomainObject(sessionData, message, "flight", flightExtractor::extractData).ifPresent(sessionData::setFlight);
                     break;
                 default:
                     throw new IllegalStateException();

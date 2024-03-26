@@ -6,6 +6,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import org.hybridai.llmutil.StatefulChat;
 import org.hybridai.refund.model.SessionData;
 import org.jboss.logging.Logger;
 
@@ -23,6 +24,9 @@ public class RefundChatbotEndpoint {
     @Inject
     DroolsRefundCalculator refundCalculator;
 
+    @Inject
+    StatefulChat statefulChat;
+
     @POST
     @Path("chatbot/{sessionId}/refund")
     @Produces(MediaType.TEXT_PLAIN)
@@ -35,8 +39,11 @@ public class RefundChatbotEndpoint {
 
         stateManager.getState(sessionData).extractData(message);
 
-        return sessionData.isComplete() ?
-                refundCalculator.checkRefund(sessionData) :
-                stateManager.getState(sessionData).chat(message);
+        if (sessionData.isComplete()) {
+            statefulChat.clear(sessionData.getSessionId());
+            return refundCalculator.checkRefund(sessionData);
+        }
+
+        return stateManager.getState(sessionData).chat(message);
     }
 }
