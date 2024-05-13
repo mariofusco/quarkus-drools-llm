@@ -26,27 +26,23 @@ The goal of this project is to demonstrate how [Quarkus](https://quarkus.io/), w
 
 ## Installing and integrating a local LLM engine
 
-LangChain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration uses on a locally running [Ollama](https://github.com/ollama/ollama) server. 
+LangChain4j provides an abstraction on top of an underlying LLM, so you could switch between different implementations, and for example integrate ChatGPT, with very few configuration changes. In order to have a self-contained application, not relying on any external service, the current configuration uses on a locally running [InstructLab](https://github.com/instructlab/instructlab/tree/main) server. 
 
-Ollama has a [library](https://ollama.com/library) with quite a long list of different models. This project defaults to a model called Mistral 7B that offers a good compromise between system requirements and capabilities. This choice has been configured in the Quarkus application.properties file as it follows: 
+InstructLab API is fully compatible with OpenAI's one, so to integrate it you can use the `quarkus-langchain4j-openai` extension and configure it in the Quarkus `application.properties` file as it follows: 
 
 ```properties
-# Configure Ollama server to use Mistral 7B model
-quarkus.langchain4j.ollama.chat-model.model-id=mistral
+# Configure openai server to use Merlinite 7B model
+quarkus.langchain4j.openai.chat-model.model-name=models/merlinite-7b-lab-Q4_K_M.gguf
 # Choose a low temperature to minimize hallucination
-quarkus.langchain4j.ollama.chat-model.temperature=0.1
+quarkus.langchain4j.openai.chat-model.temperature=0
 # Set timeout to 3 minutes (local LLM can be quite slow)
-quarkus.langchain4j.ollama.timeout=180s
+quarkus.langchain4j.openai.timeout=180s
 # Enable logging of both requests and responses
-quarkus.langchain4j.ollama.log-requests=true
-quarkus.langchain4j.ollama.log-responses=true
+quarkus.langchain4j.openai.log-requests=true
+quarkus.langchain4j.openai.log-responses=true
 ```
 
-For detailed instructions of Ollama please refer to the [Ollama](https://github.com/ollama/ollama) documentation, but for example, you can start the containerized server with Mistral model by the following command in order to run this application:
-```shell script
-docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
-docker exec -it ollama ollama run mistral
-```
+For detailed instructions on how to install and run InstructLab locally please refer to the [InstructLab documentation](https://github.com/instructlab/instructlab/blob/main/README.md).
 
 ## Running the application
 

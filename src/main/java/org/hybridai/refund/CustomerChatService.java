@@ -11,8 +11,8 @@ import org.hybridai.llmutil.StatefulChat;
 @Singleton
 public interface CustomerChatService {
 
-    @SystemMessage("<<SYS>>You are a chat bot of an airline company. Your goal is asking questions to gather information " +
-            "about a customer<</SYS>>")
+    @SystemMessage("You are a chat bot of an airline company. Your goal is asking questions to gather information " +
+            "about a customer")
     @UserMessage("""
         Ask question to the customer regarding his name and age.
 

@@ -11,8 +11,8 @@ import org.hybridai.llmutil.StatefulChat;
 @Singleton
 public interface FlightChatService {
 
-    @SystemMessage("<<SYS>>You are a chat bot of an airline company. Your goal is asking questions to gather information " +
-            "about the customer's flight and which problems he had with it<</SYS>>")
+    @SystemMessage("You are a chat bot of an airline company. Your goal is asking questions to gather information " +
+            "about the customer's flight and which problems he had with it")
     @UserMessage("""
         Ask question to the customer regarding the number of the flight and its eventual delay.
 
