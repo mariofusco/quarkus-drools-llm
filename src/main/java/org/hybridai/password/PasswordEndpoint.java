@@ -28,7 +28,9 @@ public class PasswordEndpoint {
         long start = System.currentTimeMillis();
         String password = passwordGenerator.generatePassword(message).trim();
         int length = 0;
-        while (length < password.length()-1 && Character.isLetter(password.charAt(++length)));
+        while (length < password.length() && Character.isLetter(password.charAt(length))) {
+            length++;
+        }
         password = password.substring(0, length);
         long llmResponse = System.currentTimeMillis();
         LOG.info( "LLM processing time: " + (llmResponse - start) + " msecs" );
