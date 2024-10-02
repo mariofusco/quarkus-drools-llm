@@ -37,10 +37,11 @@ public class RefundChatbotEndpoint {
         SessionData sessionData = sessionCache.getSessionData(sessionId);
         LOG.info("sessionData = " + sessionData);
 
-        stateManager.getState(sessionData).extractData(message);
+        if (!sessionData.isComplete()) {
+            stateManager.getState(sessionData).extractData(message);
+        }
 
-        if (sessionData.isComplete()) {
-            statefulChat.clear(sessionData.getSessionId());
+        if (sessionData.calculateRefund()) {
             return refundCalculator.checkRefund(sessionData);
         }
 

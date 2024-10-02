@@ -20,11 +20,7 @@ public class DroolsRefundCalculator {
         kieSession.fireAllRules();
 
         var refunds = kieSession.getInstancesOf(RefundAmount.class);
-
-        if (refunds.isEmpty()) {
-            return "Sorry " + sessionData.getCustomer().getFullName() + ", but you are not eligible for any refund.";
-        }
-        RefundAmount refund = refunds.iterator().next();
-        return "Good news " + sessionData.getCustomer().getFullName() + ", you are eligible for a refund of $" + refund.getAmount();
+        sessionData.setRefundAmount(refunds.isEmpty() ? RefundAmount.NO_REFUND : refunds.iterator().next());
+        return sessionData.getOutcome();
     }
 }

@@ -166,4 +166,4 @@ Giving a try to this setup you could for instance experience a conversation with
 
 ![](images/refund.png)
 
-This outcome is coeherent with the business rules described above, in fact the 4 hours, 240 minutes, correspond to a refund of $480, plus the 10% since the customer is 70 years old, giving a total of $528.
+This outcome is coeherent with the business rules described above, in fact the 4 hours, 240 minutes, correspond to a refund of $480, plus the 10% since the customer is 70 years old, giving a total of $528. Note that since the sequence of business rules applied by the engine is fully transparent and auditable, this also the chatbot to provide the customer with a clear explanation of how his refund has been calculated. 

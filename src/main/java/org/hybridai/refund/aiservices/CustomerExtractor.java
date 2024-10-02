@@ -1,4 +1,4 @@
-package org.hybridai.refund;
+package org.hybridai.refund.aiservices;
 
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;

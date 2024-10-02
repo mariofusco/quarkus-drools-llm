@@ -8,6 +8,8 @@ public class SessionData {
 
     private Flight flight;
 
+    private RefundAmount refundAmount;
+
     public String getSessionId() {
         return sessionId;
     }
@@ -32,8 +34,26 @@ public class SessionData {
         this.flight = flight;
     }
 
+    public RefundAmount getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(RefundAmount refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
+    public String getOutcome() {
+        return refundAmount.getAmount() > 0 ?
+                "Good news " + customer.getFullName() + ", you are eligible for a refund of $" + refundAmount.getAmount() :
+                "Sorry " + customer.getFullName() + ", but you are not eligible for any refund.";
+    }
+
     public boolean isComplete() {
         return customer != null && flight != null;
+    }
+
+    public boolean calculateRefund() {
+        return isComplete() && refundAmount == null;
     }
 
     @Override

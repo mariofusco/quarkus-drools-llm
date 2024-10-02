@@ -6,6 +6,11 @@ import java.util.function.Function;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.hybridai.llmutil.ConcatenatingChatMemory;
+import org.hybridai.refund.aiservices.AirlineChatService;
+import org.hybridai.refund.aiservices.CustomerChatService;
+import org.hybridai.refund.aiservices.CustomerExtractor;
+import org.hybridai.refund.aiservices.FlightChatService;
+import org.hybridai.refund.aiservices.FlightExtractor;
 import org.hybridai.refund.model.ChatState;
 import org.hybridai.refund.model.SessionData;
 import org.hybridai.refund.model.Validated;
@@ -18,6 +23,9 @@ public class StateManager {
 
     @Inject
     DroolsStateMachine stateMachine;
+
+    @Inject
+    AirlineChatService airlineChatService;
 
     @Inject
     CustomerChatService customerChatService;
@@ -83,7 +91,7 @@ public class StateManager {
             return switch (chatState) {
                 case EXTRACT_CUSTOMER -> customerChatService.chat(sessionData.getSessionId(), message);
                 case EXTRACT_FLIGHT -> flightChatService.chat(sessionData.getSessionId(), message);
-                default -> throw new IllegalStateException();
+                default -> airlineChatService.chat(sessionData.getSessionId(), message);
             };
         }
     }
