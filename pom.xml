@@ -7,13 +7,12 @@
   <version>1.0.0-SNAPSHOT</version>
   <properties>
     <compiler-plugin.version>3.12.1</compiler-plugin.version>
-    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.version>3.15.1</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
-    <quarkus-langchain.version>0.18.0</quarkus-langchain.version>
+    <quarkus-langchain.version>0.20.3</quarkus-langchain.version>
 <!--    <quarkus-drools.version>999-SNAPSHOT</quarkus-drools.version>-->
     <quarkus-drools.version>10.0.0</quarkus-drools.version>
   </properties>
@@ -51,8 +50,14 @@
 
     <dependency>
       <groupId>io.quarkiverse.langchain4j</groupId>
-      <artifactId>quarkus-langchain4j-ollama</artifactId>
+      <artifactId>quarkus-langchain4j-jlama</artifactId>
       <version>${quarkus-langchain.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.tjake</groupId>
+      <artifactId>jlama-native</artifactId>
+      <version>0.5.0</version>
     </dependency>
 
     <dependency>
@@ -83,6 +88,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <jvmArgs>--enable-preview --enable-native-access=ALL-UNNAMED</jvmArgs>
+          <modules>
+            <module>jdk.incubator.vector</module>
+          </modules>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
