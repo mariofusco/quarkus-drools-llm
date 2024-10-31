@@ -13,7 +13,8 @@
     <quarkus.platform.version>3.15.1</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
-    <quarkus-langchain.version>0.18.0</quarkus-langchain.version>
+<!--    <quarkus-langchain.version>0.18.0</quarkus-langchain.version>-->
+    <quarkus-langchain.version>999-SNAPSHOT</quarkus-langchain.version>
 <!--    <quarkus-drools.version>999-SNAPSHOT</quarkus-drools.version>-->
     <quarkus-drools.version>10.0.0</quarkus-drools.version>
   </properties>

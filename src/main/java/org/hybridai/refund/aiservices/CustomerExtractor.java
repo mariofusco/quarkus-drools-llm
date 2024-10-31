@@ -2,6 +2,7 @@ package org.hybridai.refund.aiservices;
 
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
+import io.quarkiverse.langchain4j.guardrails.OutputGuardrails;
 import jakarta.inject.Singleton;
 import org.hybridai.llmutil.StatelessChat;
 import org.hybridai.refund.model.Customer;
@@ -11,6 +12,7 @@ import org.hybridai.refund.model.Customer;
 public interface CustomerExtractor {
 
     @UserMessage("Extract information about a customer from this text '{text}'. The response must contain only the JSON with customer's data and without any other sentence.")
+    @OutputGuardrails(ValidJsonOutputGuardrail.class)
     Customer extractData(String text);
 }
 
