@@ -12,7 +12,7 @@ import org.hybridai.refund.model.Customer;
 public interface CustomerExtractor {
 
     @UserMessage("Extract information about a customer from this text '{text}'. The response must contain only the JSON with customer's data and without any other sentence.")
-    @OutputGuardrails(ValidJsonOutputGuardrail.class)
+    @OutputGuardrails(CustomerExtractionOutputGuardrail.class)
     Customer extractData(String text);
 }
 
