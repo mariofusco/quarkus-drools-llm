@@ -16,11 +16,7 @@ public interface CustomerChatService {
             about a customer
             """)
     @UserMessage("""
-        Ask question to the customer regarding his name and age.
-
-        +++
-        {message}
-        +++
+        Ask question to the customer regarding his name and age, also replying to his message '{message}'
         """)
     String chat(@MemoryId String sessionId, String message);
 
