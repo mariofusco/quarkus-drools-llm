@@ -13,8 +13,6 @@
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
     <quarkus-langchain.version>0.21.0</quarkus-langchain.version>
-<!--    <quarkus-langchain.version>999-SNAPSHOT</quarkus-langchain.version>-->
-    <quarkus-drools.version>10.0.0</quarkus-drools.version>
     <jlama.version>0.8.2</jlama.version>
   </properties>
 
@@ -41,12 +39,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-quarkus</artifactId>
-      <version>${quarkus-drools.version}</version>
     </dependency>
 
     <dependency>

@@ -3,23 +3,21 @@ package org.hybridai.mortgage;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.kie.api.runtime.KieRuntimeBuilder;
-import org.kie.api.runtime.KieSession;
 
 @Singleton
 public class DroolsMortgageCalculator {
 
-    @Inject
-    KieRuntimeBuilder runtimeBuilder;
-
     public String grantMortgage(Person person) {
-        KieSession kieSession = runtimeBuilder.newKieSession("mortgage");
         List<String> answers = new ArrayList<>();
-        kieSession.setGlobal("answers", answers);
-        kieSession.insert(person);
-        kieSession.fireAllRules();
+
+        if (person.getAge() < 18) {
+            answers.add(person.getFullName() + " is too young");
+        }
+
+        if (person.income() < 100000) {
+            answers.add(person.getFullName() + "'s income is too low");
+        }
 
         if (answers.isEmpty()) {
             return "Yes, mortgage can be granted to " + person.getFullName();

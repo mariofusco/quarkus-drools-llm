@@ -16,11 +16,7 @@ public interface FlightChatService {
             about the customer's flight and which problems he had with it
             """)
     @UserMessage("""
-        Ask question to the customer regarding the number of the flight and its eventual delay.
-
-        +++
-        {message}
-        +++
+        Ask question to the customer regarding the number of the flight and its eventual delay, also replying to his message '{message}'
         """)
     String chat(@MemoryId String sessionId, String message);
 

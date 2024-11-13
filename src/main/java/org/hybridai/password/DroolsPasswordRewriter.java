@@ -1,20 +1,31 @@
 package org.hybridai.password;
 
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.kie.api.runtime.KieRuntimeBuilder;
-import org.kie.api.runtime.KieSession;
 
 @Singleton
 public class DroolsPasswordRewriter {
 
-    @Inject
-    KieRuntimeBuilder runtimeBuilder;
-
     public String rewritePassword(String s) {
-        KieSession kieSession = runtimeBuilder.newKieSession("password");
-        kieSession.insert(s);
-        kieSession.fireAllRules();
-        return kieSession.getSingleInstanceOf(String.class);
+        if (s.matches(".*[\\W_].*")) {
+            if (s.contains("e")) {
+                s = s.replace('e', '&');
+            } else if (s.contains("a")) {
+                s = s.replace('a', '@');
+            } else if (s.contains("i")) {
+                s = s.replace('i', '!');
+            } else {
+                s = "#" + s;
+            }
+        }
+
+        if (s.contains(" ")) {
+            s = s.replace(' ', '_');
+        }
+
+        if (s.length() > 10) {
+            s = s.substring(0, 8);
+        }
+
+        return s;
     }
 }
