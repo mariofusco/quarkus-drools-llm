@@ -57,7 +57,7 @@
       <groupId>com.github.tjake</groupId>
       <artifactId>jlama-native</artifactId>
       <version>${jlama.version}</version>
-      <classifier>linux-x86_64</classifier>
+      <classifier>${os.detected.name}-${os.detected.arch}</classifier>
     </dependency>
 
     <dependency>
@@ -73,6 +73,13 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.7.0</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <groupId>io.quarkus.platform</groupId>
