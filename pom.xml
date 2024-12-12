@@ -10,11 +10,10 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.platform.version>3.15.1</quarkus.platform.version>
+    <quarkus.platform.version>3.17.4</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
-    <quarkus-langchain.version>0.18.0</quarkus-langchain.version>
-<!--    <quarkus-drools.version>999-SNAPSHOT</quarkus-drools.version>-->
+    <quarkus-langchain.version>0.22.0</quarkus-langchain.version>
     <quarkus-drools.version>10.0.0</quarkus-drools.version>
   </properties>
 
@@ -36,11 +35,11 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+      <artifactId>quarkus-rest-jackson</artifactId>
     </dependency>
 
     <dependency>
