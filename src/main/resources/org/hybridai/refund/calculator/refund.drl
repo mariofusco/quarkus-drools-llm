@@ -2,17 +2,22 @@ package org.hybridai.refund.calculator;
 
 import org.hybridai.refund.model.*;
 
-rule "Refund eligibility" when
+rule "Eligible for refund if the delay was more than 1 hour" when
 	Flight( $delay : delayInMinutes >= 60 )
 then
-	insert(new RefundAmount( 2 * $delay )
-	        .addExplanation("You're entitled of $2 of refund for each of the " + $delay + " minutes of delay."));
+	insert(new RefundAmount());
 end
 
-rule "Increase refund of 10% for seniors" when
-	Customer( age > 65 )
-	$r: RefundAmount()
+rule "Refund amount is $2 per minute of delay" when
+	Flight( $delay : delayInMinutes )
+	$r: RefundAmount( amount == 0.0 )
 then
-    $r.addExplanation("Since you're a senior customer (older than 65) you're also entitled of a 10% increase on your refund.");
+	modify($r) { setAmount( 2 * $delay ); }
+end
+
+rule "Refund is increased by 10% for seniors (people older than 65)" when
+	Customer( age > 65 )
+	$r: RefundAmount( amount > 0.0 )
+then
 	$r.setAmount( $r.getAmount() * 1.1 );
 end

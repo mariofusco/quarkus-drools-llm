@@ -1,5 +1,8 @@
 package org.hybridai.refund.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SessionData {
 
     private final String sessionId;
@@ -9,6 +12,8 @@ public class SessionData {
     private Flight flight;
 
     private RefundAmount refundAmount;
+
+    private final List<String> explanations = new ArrayList<>();
 
     public String getSessionId() {
         return sessionId;
@@ -62,5 +67,17 @@ public class SessionData {
                 "customer=" + customer +
                 ", flight=" + flight +
                 '}';
+    }
+
+    public void addExplanation(String explanation) {
+        explanations.add(explanation);
+    }
+
+    public String getExplanation() {
+        return String.join(" ", explanations);
+    }
+
+    public boolean hasExplanation() {
+        return !explanations.isEmpty();
     }
 }

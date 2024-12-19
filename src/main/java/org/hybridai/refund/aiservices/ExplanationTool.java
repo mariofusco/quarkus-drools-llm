@@ -4,7 +4,6 @@ import dev.langchain4j.agent.tool.Tool;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.hybridai.refund.SessionCache;
-import org.hybridai.refund.model.RefundAmount;
 import org.hybridai.refund.model.SessionData;
 import org.jboss.logging.Logger;
 
@@ -20,8 +19,9 @@ public class ExplanationTool {
     public String getRefundExplanation(String sessionId) {
         LOG.info("ExplanationTool called for session: " + sessionId);
         SessionData sessionData = sessionCache.getSessionData(sessionId);
-        RefundAmount refundAmount = sessionData.getRefundAmount();
-        String explanation = refundAmount != null ? "The explanation for the refund is: " + refundAmount.getExplanation() : "At the moment there is no explanation available.";
+        String explanation = sessionData.hasExplanation() ?
+                "The explanation for the refund is: " + sessionData.getExplanation() :
+                "You're not entitled of a refund because your delay was less than 1 hour.";
         LOG.info(explanation);
         return explanation;
     }
