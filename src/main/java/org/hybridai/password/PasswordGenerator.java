@@ -5,7 +5,7 @@ import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.inject.Singleton;
 import org.hybridai.llmutil.StatelessChat;
 
-@RegisterAiService(chatMemoryProviderSupplier = StatelessChat.MemorySupplier.class, modelName = "hotmodel")
+@RegisterAiService(chatMemoryProviderSupplier = StatelessChat.MemorySupplier.class)
 @Singleton
 public interface PasswordGenerator {
 

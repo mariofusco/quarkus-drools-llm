@@ -9,6 +9,7 @@ import org.hybridai.llmutil.ConcatenatingChatMemory;
 import org.hybridai.refund.aiservices.AirlineChatService;
 import org.hybridai.refund.aiservices.CustomerChatService;
 import org.hybridai.refund.aiservices.CustomerExtractor;
+import org.hybridai.refund.aiservices.ExplanationTool;
 import org.hybridai.refund.aiservices.FlightChatService;
 import org.hybridai.refund.aiservices.FlightExtractor;
 import org.hybridai.refund.model.ChatState;
@@ -41,6 +42,9 @@ public class StateManager {
 
     @Inject
     ConcatenatingChatMemory extractorsMemory;
+
+    @Inject
+    ExplanationTool explanationTool;
 
     public ChatbotState getState(SessionData sessionData) {
         var nextState = stateMachine.nextState(sessionData);
@@ -91,7 +95,8 @@ public class StateManager {
             return switch (chatState) {
                 case EXTRACT_CUSTOMER -> customerChatService.chat(sessionData.getSessionId(), message);
                 case EXTRACT_FLIGHT -> flightChatService.chat(sessionData.getSessionId(), message);
-                default -> airlineChatService.chat(sessionData.getSessionId(), message);
+//                default -> airlineChatService.chat(sessionData.getSessionId(), message);
+                default -> explanationTool.getRefundExplanation(sessionData.getSessionId());
             };
         }
     }
