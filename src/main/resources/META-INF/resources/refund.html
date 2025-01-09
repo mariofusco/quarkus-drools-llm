@@ -49,7 +49,7 @@
         return Math.random().toString(36).substring(2, 15);
     }
 
-    const apiUrl = 'http://localhost:8080/hybridai/chatbot/' + generateSessionId() + '/refund';
+    const apiUrl = window.location.origin + '/hybridai/chatbot/' + generateSessionId() + '/refund';
 
     function displayMessage(message, sender) {
         const messagesContainer = document.querySelector('.messages');
