@@ -3,94 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>Airline Refund Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #5436DA;
+            --primary-light: #EAE6FD;
+            --text-color: #343541;
+            --text-secondary: #6e6e80;
+            --background-color: #FFFFFF;
+            --chat-background: #F7F7F8;
+            --border-color: #E5E5E5;
+            --user-bubble: #5436DA;
+            --bot-bubble: #FFFFFF;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        .chat-container {
-            max-width: 800px;
-            margin: 20px auto;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--chat-background);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        .chat-container .messages {
+
+        .header {
+            background-color: var(--background-color);
+            padding: 16px 24px;
+            box-shadow: 0 2px 6px var(--shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .messages {
             list-style-type: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
-        .chat-container .message {
-            margin-bottom: 10px;
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
         }
-        .chat-container .user-message {
-            text-align: right;
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 2px var(--shadow);
+            position: relative;
+            font-size: 15px;
         }
-        .chat-container .bot-message {
-            text-align: left;
-            color: red;
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        .user-message .message-content {
+            background-color: var(--user-bubble);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+        }
+
+        .bot-message .message-content {
+            background-color: var(--bot-bubble);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .user-message .avatar {
+            align-self: flex-end;
+            background-color: var(--user-bubble);
+            color: white;
+        }
+
+        .bot-message .avatar {
+            align-self: flex-start;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .input-container {
+            padding: 16px 24px 24px;
+            background-color: var(--background-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 2px 6px var(--shadow);
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary-color);
+        }
+
+        #user-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            padding-right: 50px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: none;
+            height: 54px;
+            max-height: 200px;
+            line-height: 1.5;
+            border-radius: 12px;
+            background-color: transparent;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-button:hover {
+            background-color: #4629C0;
+        }
+
+        .send-button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-left: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 1px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 0 24px;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .empty-state h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+            max-width: 400px;
         }
     </style>
 </head>
 <body>
 
-<h1 align="center">Airline refund chatbot</h1>
+<div class="header">
+    <h1>Airline Refund Assistant</h1>
+</div>
 
 <div class="chat-container">
-    <ul class="messages"></ul>
-    <textarea id="user-input" placeholder="How can I help you?" cols="90"></textarea>
-    <button onclick="sendMessage()">Send</button>
+    <div class="messages-container">
+        <div class="empty-state" id="empty-state">
+            <i class="fas fa-plane"></i>
+            <h2>Welcome to Airline Refund Assistant</h2>
+            <p>Ask me questions about your flight refund or how to process a refund request.</p>
+        </div>
+        <ul class="messages" id="message-list"></ul>
+    </div>
+
+    <div class="input-container">
+        <div class="input-wrapper">
+            <textarea id="user-input" placeholder="Type your message here..." rows="1"></textarea>
+            <button class="send-button" id="send-button" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
+    // Elements
+    const messagesList = document.getElementById('message-list');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const emptyState = document.getElementById('empty-state');
+
+    // Session ID
     function generateSessionId() {
         return Math.random().toString(36).substring(2, 15);
     }
 
-    const apiUrl = 'http://localhost:8080/hybridai/chatbot/' + generateSessionId() + '/refund';
+    const sessionId = generateSessionId();
+    const apiUrl = 'http://localhost:8080/hybridai/chatbot/' + sessionId + '/refund';
 
-    function displayMessage(message, sender) {
-        const messagesContainer = document.querySelector('.messages');
-        const messageElement = document.createElement('li');
-        messageElement.classList.add('message');
-        messageElement.classList.add(`${sender}-message`);
-        messageElement.innerText = message;
-        messagesContainer.appendChild(messageElement);
+    // Auto-resize the textarea
+    userInput.addEventListener('input', function() {
+        // Reset height to auto to get the correct scrollHeight
+        this.style.height = 'auto';
+
+        // Set the height to the scrollHeight (content height)
+        const newHeight = Math.min(this.scrollHeight, 200);
+        this.style.height = newHeight + 'px';
+
+        // Enable/disable send button based on input
+        sendButton.disabled = this.value.trim() === '';
+    });
+
+    // Function to display messages
+    function displayMessage(content, sender) {
+        // Hide empty state if it's visible
+        if (emptyState.style.display !== 'none') {
+            emptyState.style.display = 'none';
+        }
+
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', `${sender}-message`);
+
+        const avatar = document.createElement('div');
+        avatar.classList.add('avatar');
+
+        if (sender === 'user') {
+            avatar.innerHTML = '<i class="fas fa-user"></i>';
+        } else {
+            avatar.innerHTML = '<i class="fas fa-headset"></i>';
+        }
+
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        messageContent.innerText = content;
+
+        messageItem.appendChild(avatar);
+        messageItem.appendChild(messageContent);
+        messagesList.appendChild(messageItem);
+
+        // Scroll to the bottom of the messages container
+        const messagesContainer = document.querySelector('.messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
+    // Function to show typing indicator
+    function showTypingIndicator() {
+        const typingItem = document.createElement('li');
+        typingItem.classList.add('message', 'bot-message', 'typing-indicator-container');
+        typingItem.id = 'typing-indicator';
+
+        const avatar = document.createElement('div');
+        avatar.classList.add('avatar');
+        avatar.innerHTML = '<i class="fas fa-headset"></i>';
+
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('message-content', 'typing-indicator');
+
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            typingIndicator.appendChild(dot);
+        }
+
+        typingItem.appendChild(avatar);
+        typingItem.appendChild(typingIndicator);
+        messagesList.appendChild(typingItem);
+
+        // Scroll to the bottom
+        const messagesContainer = document.querySelector('.messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Function to hide typing indicator
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+
+    // Function to send a message
     function sendMessage() {
-        const userInput = document.getElementById('user-input').value;
-        if (!userInput.trim()) return;
+        const message = userInput.value.trim();
+        if (!message) return;
 
-        displayMessage(userInput, 'user');
+        // Display user message
+        displayMessage(message, 'user');
 
+        // Clear and reset the input
+        userInput.value = '';
+        userInput.style.height = '54px';
+        sendButton.disabled = true;
+
+        // Show typing indicator
+        showTypingIndicator();
+
+        // Send to API
         fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: userInput
+            body: message
         })
-                .then(response => response.text())
-                .then(data => {
-                    console.error('data:', data);
-                    displayMessage(data, 'bot');
-                })
-                .catch(error => {
-                    console.error('Error sending message:', error);
-                    displayMessage('Error sending message. Please try again.' + error, 'bot');
-                });
+            .then(response => response.text())
+            .then(data => {
+                // Hide typing indicator
+                hideTypingIndicator();
 
-        document.getElementById('user-input').value = '';
+                // Display bot response
+                displayMessage(data, 'bot');
+            })
+            .catch(error => {
+                // Hide typing indicator
+                hideTypingIndicator();
+
+                // Display error message
+                displayMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                console.error('Error sending message:', error);
+            });
     }
 
-    document.getElementById('user-input').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            sendMessage();
+            if (!sendButton.disabled) {
+                sendMessage();
+            }
         }
+    });
+
+    // Focus input field on load
+    window.addEventListener('load', function() {
+        userInput.focus();
     });
 </script>
 </body>
